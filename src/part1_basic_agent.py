@@ -31,11 +31,23 @@ def get_chat_model():
     A "chat model" is the core building block — it takes messages in,
     returns a message out. Think of it as a function:
         input: list of messages -> output: one response message
+    
+    Supports: OpenAI, Anthropic, and OpenAI-compatible providers like DeepSeek.
+    Set OPENAI_BASE_URL in .env to point at a different provider.
     """
     if os.getenv("OPENAI_API_KEY"):
         from langchain_openai import ChatOpenAI
+        
+        # If a custom base URL is set, use it (for DeepSeek, Ollama, etc.)
+        base_url = os.getenv("OPENAI_BASE_URL", None)
+        model_name = os.getenv("LLM_MODEL", "deepseek-chat")
+        
         # temperature=0.7 means moderately creative (0=deterministic, 2=very random)
-        return ChatOpenAI(model="gpt-4o-mini", temperature=0.7)
+        return ChatOpenAI(
+            model=model_name,
+            temperature=0.7,
+            base_url=base_url,  # None = default OpenAI endpoint
+        )
     
     elif os.getenv("ANTHROPIC_API_KEY"):
         from langchain_anthropic import ChatAnthropic
