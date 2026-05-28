@@ -1,0 +1,11 @@
+# Core LangChain
+langchain>=0.3.25
+langchain-core>=0.3.62
+langchain-community>=0.3.24
+
+# LLM Providers (install what you need)
+langchain-openai>=0.3.18
+langchain-anthropic>=0.3.14
+
+# Environment
+python-dotenv>=1.1.0
