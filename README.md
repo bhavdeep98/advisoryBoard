@@ -1,78 +1,81 @@
-# Advisory Board Playground
+# Advisory Board: Multi-Agent Tutorial
 
-An interactive teaching tool for multi-agent AI systems. Configure AI agents live and see how changes affect a group conversation in real-time.
+A step-by-step code tutorial for building a multi-agent AI system with LangChain and LangGraph. Each part is a self-contained Python script you can read, understand, and run.
 
-Built step-by-step with LangChain/LangGraph as a learning project.
+Built for teachers and students who want to understand multi-agent systems by reading and running real code.
 
-## What Is This?
+## The Concept
 
-A web app with two panels:
-- **Left:** Agent configuration cards (system prompt, temperature, model, on/off toggle)
-- **Right:** Live group chat where agents debate your ideas
+Four AI agents with distinct personalities debate your ideas:
 
-Change a setting, see the effect immediately. Built for teachers and students who want to understand how multi-agent systems work by experimenting with them.
+| Agent | Role | Style |
+|-------|------|-------|
+| Strategist | Big picture, long-term | "What does this look like in 3 years?" |
+| Skeptic | Pokes holes, stress-tests | "Here's why this fails..." |
+| Optimist | Finds opportunity | "Yes, and what if we also..." |
+| Pragmatist | Execution focus | "What do we build Monday?" |
 
-## The Agents
+## Tutorial Parts
 
-| Agent | Role | Personality |
-|-------|------|-------------|
-| The Strategist | Big picture, long-term thinking | "What does this look like in 3 years?" |
-| The Skeptic | Pokes holes, stress-tests | "Here's why this fails..." |
-| The Optimist | Finds opportunity, builds on ideas | "Yes, and what if we also..." |
-| The Pragmatist | Execution focus, next steps | "Ok but what do we build Monday?" |
+Run each script in order. Each one builds on the concepts from the previous.
 
-All configurable. Change their personality, swap their role, disable them, crank up the randomness.
+```bash
+# Activate virtual environment first
+.\venv\Scripts\activate   # Windows
+source venv/bin/activate   # Mac/Linux
 
-## Teaching Presets
+# Then run each part
+python src/part1_chat_model.py
+python src/part2_system_prompts.py
+python src/part3_langgraph_basics.py
+python src/part4_advisory_board.py
+python src/part5_human_in_loop.py
+```
 
-- **Default Advisory Board** — balanced team, good starting point
-- **Echo Chamber** — all agents agree (shows why diversity matters)
-- **Maximum Chaos** — high temperature, contradictory prompts
-- **Minimal** — one agent, bare prompt (starting point for students)
-
-## Tech Stack
-
-- **Python + LangGraph** — agent orchestration, state, turn-taking
-- **FastAPI** — backend API + WebSocket for real-time
-- **HTML/CSS/JS** — simple frontend, no framework dependency
-- **LLM Flexible** — OpenAI, Anthropic, or any LangChain-supported provider
-
-## Learning Path (7 Parts)
-
-Each part is a standalone tutorial with working code and a "demo moment" you can show in class.
-
-| Part | What You Build | Key Learning |
-|------|---------------|--------------|
-| 1 | Single agent in terminal | LangChain basics: models, prompts, memory |
-| 2 | Configurable personality | System prompts, temperature effects |
-| 3 | Two agents talking | LangGraph: nodes, edges, state |
-| 4 | Four agents debating | Multi-agent orchestration, turn-taking |
-| 5 | Human-in-the-loop | Interrupts, user input, conversation steering |
-| 6 | Backend + simple UI | FastAPI, WebSocket, streaming responses |
-| 7 | Configuration playground | Live config editing, presets, teaching UI |
-
-## Getting Started
-
-See `docs/` for tutorials. Start with [Part 1: Single Agent](docs/part1-single-agent.md).
+| Part | File | What You Learn |
+|------|------|----------------|
+| 1 | `part1_chat_model.py` | Chat models, message types, conversation memory |
+| 2 | `part2_system_prompts.py` | System prompts as personality, temperature effects |
+| 3 | `part3_langgraph_basics.py` | LangGraph nodes, edges, state, two agents debating |
+| 4 | `part4_advisory_board.py` | Four agents, round-robin, enable/disable agents |
+| 5 | `part5_human_in_loop.py` | Multi-round conversation, addressing specific agents |
 
 ## Setup
 
 ```bash
-# Clone and enter
-git clone <this-repo>
-cd advisory-board
+# Clone
+git clone https://github.com/bhavdeep98/advisoryBoard.git
+cd advisoryBoard
 
-# Create virtual environment
+# Virtual environment
 python -m venv venv
-source venv/bin/activate  # or venv\Scripts\activate on Windows
+.\venv\Scripts\activate   # Windows
+source venv/bin/activate   # Mac/Linux
 
-# Install dependencies
+# Install
 pip install -r requirements.txt
 
-# Copy env and add your API key
+# Configure API key
 cp .env.example .env
-# Edit .env with your OpenAI or Anthropic key
+# Edit .env — add your API key (OpenAI, DeepSeek, or any OpenAI-compatible provider)
 ```
+
+## How to Read the Code
+
+Each file follows the same structure:
+1. **Header** — what you'll learn, how to run it
+2. **Steps** — numbered sections with comments explaining every concept
+3. **Output** — the script runs and prints results so you see it working
+4. **Key Insights** — summary at the end of what to take away
+
+The code IS the tutorial. Read it top to bottom.
+
+## Tech Stack
+
+- Python 3.10+
+- LangChain (model abstraction)
+- LangGraph (multi-agent orchestration)
+- Any OpenAI-compatible LLM (DeepSeek, OpenAI, Anthropic, Ollama)
 
 ## License
 
