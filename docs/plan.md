@@ -1,25 +1,49 @@
-# Project Plan: Advisory Board Multi-Agent Chat
+# Project Plan: Advisory Board Playground
 
 ## Vision
 
-A group chat interface where four AI agents with distinct personalities debate and collaborate on your ideas. Built step-by-step as a learning project using LangChain/LangGraph.
+An interactive teaching tool where users configure AI agents and immediately see how those changes affect a live group conversation. Built step-by-step as a learning project using LangChain/LangGraph.
+
+**Primary audience:** Students and developers learning about multi-agent systems.
+**Core interaction:** Tweak agent configuration (personality, temperature, model) → see the effect in real-time conversation.
+
+## Teaching Goals
+
+- Demystify how system prompts shape agent behavior
+- Show the effect of temperature, model choice, and prompt wording
+- Let people experiment with multi-agent dynamics (enable/disable agents, change roles)
+- Provide a sandbox where "breaking things" is encouraged
 
 ## Architecture Overview
 
 ```
-┌─────────────────────────────────────────────────┐
-│                  Chat UI (React)                 │
-│         Messages with agent names/avatars        │
-└─────────────────────┬───────────────────────────┘
+┌──────────────────────────────────────────────────────────────────┐
+│                        Web UI (Playground)                        │
+├────────────────────────────┬─────────────────────────────────────┤
+│   Config Panel (left)      │      Conversation Panel (right)     │
+│                            │                                     │
+│  ┌──────────────────────┐  │  ┌─────────────────────────────┐   │
+│  │ Agent Card: Strategist│  │  │ [Strategist] In 3 years...  │   │
+│  │ - System prompt [edit]│  │  │ [Skeptic] Here's the risk...│   │
+│  │ - Temperature [slider]│  │  │ [You] What about X?         │   │
+│  │ - Model [dropdown]    │  │  │ [Optimist] Yes, and also... │   │
+│  │ - Enabled [toggle]    │  │  └─────────────────────────────┘   │
+│  └──────────────────────┘  │                                     │
+│  ┌──────────────────────┐  │  ┌─────────────────────────────┐   │
+│  │ Agent Card: Skeptic   │  │  │ [Type your message...]       │   │
+│  │ ...                   │  │  └─────────────────────────────┘   │
+│  └──────────────────────┘  │                                     │
+└────────────────────────────┴─────────────────────────────────────┘
                       │ WebSocket
 ┌─────────────────────▼───────────────────────────┐
 │              FastAPI Backend                      │
-│         Session management, streaming            │
+│     Session management, config hot-reload        │
 └─────────────────────┬───────────────────────────┘
                       │
 ┌─────────────────────▼───────────────────────────┐
 │            LangGraph Orchestrator                 │
 │    Turn-taking, state, human-in-the-loop         │
+│    Config-driven (agents rebuild on change)       │
 ├─────────────────────────────────────────────────┤
 │  Strategist  │  Skeptic  │  Optimist  │ Pragmatist│
 │    Node      │   Node    │    Node    │   Node    │
@@ -30,6 +54,25 @@ A group chat interface where four AI agents with distinct personalities debate a
 │      OpenAI / Anthropic / Local / etc.           │
 └─────────────────────────────────────────────────┘
 ```
+
+## Interactive Teaching Features
+
+### Live Configuration
+- Edit any agent's system prompt mid-conversation and see behavior shift
+- Temperature slider (0.0 to 2.0) with real-time effect
+- Model selector per agent (compare GPT-4o vs Claude vs smaller models)
+- Toggle agents on/off to see how group dynamics change
+
+### "What Changed?" Indicators
+- When config changes, next response is highlighted
+- Side-by-side comparison: "before" vs "after" a config change
+- Tooltip explanations: "Temperature 0.2 = more predictable, 1.5 = more creative"
+
+### Presets for Teaching
+- "Default Advisory Board" — balanced team
+- "Echo Chamber" — all agents agree (shows why diversity matters)
+- "Maximum Chaos" — high temperature, contradictory prompts
+- "Minimal" — one agent, bare system prompt (starting point for students)
 
 ## Agent Design
 
@@ -74,12 +117,14 @@ A group chat interface where four AI agents with distinct personalities debate a
 - Install langchain, set up API keys
 - Create a simple chat model call
 - Add conversation memory
+- **Demo moment:** Change the system prompt, re-run, see different behavior
 - Tutorial: what are chains, models, prompts
 
-### Part 2: Agent with Personality
+### Part 2: Agent with Personality (Configurable)
 - System prompts that create distinct behavior
-- Output parsing (structured vs freeform)
 - Temperature and model parameter tuning
+- **Demo moment:** Same question, different temperature — show the output spread
+- **Teaching hook:** "What makes an agent feel like a character vs a generic bot?"
 - Tutorial: prompt engineering for personality
 
 ### Part 3: Two Agents Talking (LangGraph Basics)
@@ -87,13 +132,15 @@ A group chat interface where four AI agents with distinct personalities debate a
 - Create a graph with two nodes (two agents)
 - Pass state between them
 - Simple back-and-forth conversation
+- **Demo moment:** Change one agent's prompt, watch the conversation shift
 - Tutorial: nodes, edges, state, graph execution
 
-### Part 4: Four Agents Debating
+### Part 4: Four Agents Debating (Advisory Board)
 - Expand to four agent nodes
 - Turn-taking logic (who speaks when)
 - Shared conversation state
 - Agents referencing each other's points
+- **Demo moment:** Disable the Skeptic — watch the group become an echo chamber
 - Tutorial: multi-agent orchestration patterns
 
 ### Part 5: Human-in-the-Loop
@@ -101,20 +148,24 @@ A group chat interface where four AI agents with distinct personalities debate a
 - LangGraph interrupt/resume for user turns
 - Addressing specific agents
 - Steering the conversation
+- **Demo moment:** Redirect the conversation mid-debate, see agents adapt
 - Tutorial: human-in-the-loop patterns in LangGraph
 
-### Part 6: Backend API
+### Part 6: Backend API + Simple UI
 - FastAPI app with WebSocket endpoint
 - Streaming agent responses token-by-token
-- Session management (multiple conversations)
-- Tutorial: FastAPI + WebSocket + async patterns
+- Simple HTML/CSS/JS chat interface (no React dependency)
+- Agent messages with distinct names/colors
+- **Demo moment:** Open in browser, type a message, see agents respond live
+- Tutorial: FastAPI + WebSocket + frontend basics
 
-### Part 7: Chat UI
-- React (or vanilla JS) chat interface
-- Agent messages with distinct names/colors/avatars
-- Real-time streaming display
-- Conversation history
-- Tutorial: WebSocket client, chat UI patterns
+### Part 7: Configuration Playground (Full Teaching UI)
+- Config panel: editable system prompts, temperature sliders, model selectors, toggles
+- Live hot-reload: change config mid-conversation without restarting
+- Presets: "Default", "Echo Chamber", "Maximum Chaos", "Minimal"
+- "What changed?" highlights on responses after config edits
+- **Demo moment:** Live demo in class — students change settings and see effects
+- Tutorial: building interactive teaching tools, state management
 
 ## File Structure (target)
 
